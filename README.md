@@ -8,3 +8,5 @@ Current Configuration:
     - Using python to record logs of IMU data during test flights
     - Cloud based telemetry link using onboard RPi WiFi
     -super huge pussy
+
+Test Flight video links coming soon
