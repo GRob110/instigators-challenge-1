@@ -36,8 +36,11 @@ Servo aileron; //create servo object to control servo
 int pos = 90; //neutral point for the servo
 int switchPin = 7;
 int rxAileronPin = 8;
-int rxAileronRaw; int rxAileronPass; int rxAileronSum;
+int rxAileronRaw; 
+int rxAileronPass = 90; 
+int rxAileronSum;
 unsigned long duration;
+int average = 0;
 
 // Check I2C device address and correct line below (by default address is 0x29 or 0x28)
 //                                   id, address
@@ -176,14 +179,18 @@ void loop(void)
   //Serial.println("");
 
   duration = pulseIn(switchPin, HIGH);
-  for (int i = 0; i < 3; i++) {
-    rxAileronSum += pulseIn(rxAileronPin, HIGH); //not a good function to use. Need a workaround.
 
+  rxAileronSum += pulseIn(rxAileronPin, HIGH); //not a good function to use. Need a workaround.
+  average = average +1;
+  if (average > 3) {
+
+    rxAileronRaw = rxAileronSum / 3; //check 3 later...
+    rxAileronPass = rxAileronRaw / 11.11 - 45; //millisecond convertion to angles for servo
+
+    rxAileronSum = 0;
+    average = 0;
   }
-
-  rxAileronRaw = rxAileronSum / 3;
-  rxAileronSum = 0;
-  rxAileronPass = rxAileronRaw / 11.11 - 45;
+  
   if (duration > 1500) {
     //Serial.print("passing - ");
     //Serial.print(" - ");
